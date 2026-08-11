@@ -1,11 +1,15 @@
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { globalStyles } from "../../styles/global";
 import "../../styles/global.css";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { lessons } from "../../../assets/products";
 import { Picker } from "@react-native-picker/picker";
 import VideoPlayers from "../../components/VidoePlayers";
 import { VideoView } from "expo-video";
+import Login from "../login";
+import { NUZContext } from "@/context/NUZContext";
+
+
 
 export default function Index() {
   const [semester, setSemester] = useState<string>();
@@ -14,6 +18,7 @@ export default function Index() {
   const [course, setCourse] = useState<string>();
   const [lesson, setLesson ] = useState<string>();
   const [currentVdPlay, setCurrentVdPlay] = useState<string>();
+  const {token} = useContext(NUZContext);
 
   const selectedVideos = lessons.filter((item) =>
       item.course === course &&
@@ -23,10 +28,14 @@ export default function Index() {
       item.lesson === Number(lesson)
   );
 
-  
+
 
   return (
+    
     <ScrollView>
+      {token === '' ? <Login /> :
+     
+     <ScrollView > 
       <Text style={globalStyles.title}>Hello, Peter!</Text>
 
       <View style={{ marginTop: 5, marginBottom: 5 }}>
@@ -141,8 +150,8 @@ export default function Index() {
           <Text> Please select Course, Batch, Semester and Module. </Text>
         )}
       </View>
-   
-
+      </ScrollView>
+      }
 
     </ScrollView>
   );
