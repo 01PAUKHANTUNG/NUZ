@@ -1,11 +1,19 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Tabs } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons';
+import { NUZContext } from '@/context/NUZContext';
+import Login from '../login';
+
 
 export default function _layout() {
+    const {token} = useContext(NUZContext);
+
+     
   return (
+    token === "" ? <Login /> : 
     <Tabs>
+       
         <Tabs.Screen name="index" options={{
             headerShown: false, 
             title : 'Home',
@@ -44,5 +52,6 @@ export default function _layout() {
         />
 
     </Tabs>
+    
   )
 }

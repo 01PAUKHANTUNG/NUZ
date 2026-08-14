@@ -7,7 +7,7 @@ import { NUZContext } from "@/context/NUZContext";
 
 export default function Profile() {
   
- const {token, setToken} = useContext(NUZContext);
+ const {token, setToken, studentInfo} = useContext(NUZContext);
 
 
   const handleLogout = () => {
@@ -23,8 +23,8 @@ export default function Profile() {
           <Ionicons name="person" size={45} color="#fff" />
         </View>
 
-        <Text style={globalStyles.name}>Student Name</Text>
-        <Text style={globalStyles.studentId}>Student ID: ST001</Text>
+        <Text style={globalStyles.name}>{studentInfo.name}</Text>
+        <Text style={globalStyles.studentId}>{studentInfo.studentID}</Text>
       </View>
 
       {/* Student Information */}

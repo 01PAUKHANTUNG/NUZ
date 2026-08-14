@@ -1,158 +1,245 @@
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { NUZContext } from "@/context/NUZContext";
+import { Picker } from "@react-native-picker/picker";
+import { useContext, useMemo, useState } from "react";
+import { ScrollView, Text, View } from "react-native";
+
+import { lessons } from "../../../assets/products";
+import VideoPlayers from "../../components/VidoePlayers";
 import { globalStyles } from "../../styles/global";
 import "../../styles/global.css";
-import { useContext, useEffect, useState } from "react";
-import { lessons } from "../../../assets/products";
-import { Picker } from "@react-native-picker/picker";
-import VideoPlayers from "../../components/VidoePlayers";
-import { VideoView } from "expo-video";
 import Login from "../login";
-import { NUZContext } from "@/context/NUZContext";
-
-
 
 export default function Index() {
-  const [semester, setSemester] = useState<string>();
-  const [module, setModule] = useState<string>();
-  const [batch, setBatch] = useState<string>();
-  const [course, setCourse] = useState<string>();
-  const [lesson, setLesson ] = useState<string>();
-  const [currentVdPlay, setCurrentVdPlay] = useState<string>();
-  const {token} = useContext(NUZContext);
+  const [semester, setSemester] = useState("");
+  const [module, setModule] = useState("");
+  const [lesson, setLesson] = useState("");
 
-  const selectedVideos = lessons.filter((item) =>
-      item.course === course &&
-      item.batch === Number(batch) &&
-      item.semester === Number(semester) &&
-      item.major === module &&
-      item.lesson === Number(lesson)
-  );
+  const { token, studentInfo } = useContext(NUZContext);
 
+  // --------------------------------
+  // Get student class and batch
+  // --------------------------------
 
+  const studentClass = studentInfo?.studentID?.slice(2, 5) ?? "";
+
+  const studentBatch = studentInfo?.studentID
+    ? (Number(studentInfo.studentID.slice(0, 2)) - 24).toString()
+    : "";
+
+  // --------------------------------
+  // Lessons for this student
+  // --------------------------------
+
+  const filteringLessonByStudentID = useMemo(() => {
+    return lessons.filter(
+      (item) =>
+        item.course === studentClass &&
+        item.batch === Number(studentBatch)
+    );
+  }, [studentClass, studentBatch]);
+
+  // --------------------------------
+  // Different Semesters
+  // --------------------------------
+
+  const differentSemesters = useMemo(() => {
+    return [
+      ...new Set(
+        filteringLessonByStudentID.map((item) => item.semester)
+      ),
+    ];
+  }, [filteringLessonByStudentID]);
+
+  // --------------------------------
+  // Different Modules
+  // Based on selected semester
+  // --------------------------------
+
+  const differentModules = useMemo(() => {
+    return [
+      ...new Set(
+        filteringLessonByStudentID
+          .filter(
+            (item) => item.semester === Number(semester)
+          )
+          .map((item) => item.module)
+      ),
+    ];
+  }, [filteringLessonByStudentID, semester]);
+
+  // --------------------------------
+  // Different Lessons
+  // Based on semester + module
+  // --------------------------------
+
+  const differentLessons = useMemo(() => {
+    return [
+      ...new Set(
+        filteringLessonByStudentID
+          .filter(
+            (item) =>
+              item.semester === Number(semester) &&
+              item.module === module
+          )
+          .map((item) => item.lesson)
+      ),
+    ];
+  }, [filteringLessonByStudentID, semester, module]);
+
+  // --------------------------------
+  // Selected Video
+  // --------------------------------
+
+  const selectedVideos = useMemo(() => {
+    return filteringLessonByStudentID.filter(
+      (item) =>
+        item.semester === Number(semester) &&
+        item.module === module &&
+        item.lesson === Number(lesson)
+    );
+  }, [
+    filteringLessonByStudentID,
+    semester,
+    module,
+    lesson,
+  ]);
+
+  // --------------------------------
+  // If not logged in
+  // --------------------------------
+
+  if (token === "") {
+    return <Login />;
+  }
 
   return (
-    
     <ScrollView>
-      {token === '' ? <Login /> :
-     
-     <ScrollView > 
-      <Text style={globalStyles.title}>Hello, Peter!</Text>
+      <Text style={globalStyles.title}>
+        Hello, {studentInfo?.name?.trim().split(" ").pop()}!
+      </Text>
 
       <View style={{ marginTop: 5, marginBottom: 5 }}>
         <Text style={globalStyles.paragrahp1}>
-          Master of Public Affairs
+          Class: {studentClass}
         </Text>
+
         <Text style={globalStyles.paragrahp2}>
-          Batch 2
+          Batch: {studentBatch}
         </Text>
       </View>
 
-      
+      {/* =========================
+          Semester
+      ========================= */}
 
-      {/* Course */}
-      <View style={{ marginBottom: 5 }}>
-        <Text>Course</Text>
-        <Picker
-          style={globalStyles.input}
-          selectedValue={course}
-          onValueChange={(value) => setCourse(value)}
-        >
-          <Picker.Item label="Select Course" value={undefined} />
-          <Picker.Item label="MPA" value="MPA" />
-          <Picker.Item label="LLB" value="LLB" />
-        </Picker>
-      </View>
-
-      {/* Batch */}
-      <View style={{ marginBottom: 5 }}>
-        <Text>Batch</Text>     
-        <Picker
-          style={globalStyles.input}
-          selectedValue={batch}
-          onValueChange={(value) => setBatch(value)}
-        >
-          <Picker.Item label="Select Batch" value={undefined} />
-          <Picker.Item label="Batch 1" value="1" />
-          <Picker.Item label="Batch 2" value="2" />
-          <Picker.Item label="Batch 3" value="3" />
-        </Picker>
-      </View>
-
-      {/* Semester */}
-      <View style={{ marginBottom: 5 }}>
+      <View>
         <Text>Semester</Text>
 
-        <Picker
-          style={globalStyles.input}
-          selectedValue={semester}
-          onValueChange={(value) => setSemester(value)}
-        >
-          <Picker.Item label="Select Semester" value={undefined} />
-          <Picker.Item label="Semester 1" value="1" />
-          <Picker.Item label="Semester 2" value="2" />
-          <Picker.Item label="Semester 3" value="3" />
-        </Picker>
+        <View style={{ marginBottom: 5 }}>
+          <Picker
+            style={globalStyles.input}
+            selectedValue={semester}
+            onValueChange={(value) => {
+              setSemester(value);
+              setModule("");
+              setLesson("");
+            }}
+          >
+            <Picker.Item
+              label="Select Semester"
+              value=""
+            />
+
+            {differentSemesters.map((item) => (
+              <Picker.Item
+                key={item}
+                label={`Semester ${item}`}
+                value={item.toString()}
+              />
+            ))}
+          </Picker>
+        </View>
       </View>
 
-      {/* Module */}
-      <View style={{ marginBottom: 5 }}>
-        <Text>Module</Text>
-        <Picker
-          style={globalStyles.input}
-          selectedValue={module}
-          onValueChange={(value) => setModule(value)}
-        >
-          <Picker.Item label="Select Module" value={undefined} />
-          <Picker.Item
-            label="Environmental Science"
-            value="Environmental Science"
-          />
-          <Picker.Item
-            label="Academic Writing"
-            value="Academic Writing"
-          />
-        </Picker>
+      {/* =========================
+          Modules
+      ========================= */}
+
+      <View>
+        <Text>Modules</Text>
+
+        <View style={{ marginBottom: 5 }}>
+          <Picker
+            style={globalStyles.input}
+            selectedValue={module}
+            onValueChange={(value) => {
+              setModule(value);
+              setLesson("");
+            }}
+          >
+            <Picker.Item
+              label="Select Module"
+              value=""
+            />
+
+            {differentModules.map((item) => (
+              <Picker.Item
+                key={item}
+                label={item}
+                value={item}
+              />
+            ))}
+          </Picker>
+        </View>
       </View>
 
-       {/* Lesson */}
-      <View style={{ marginBottom: 5 }}>
-        <Text>Lesson</Text>
-        <Picker
-          style={globalStyles.input}
-          selectedValue={lesson}
-          onValueChange={(value) => setLesson(value)}
-        >
-          <Picker.Item label="Select Module" value={undefined} />
-          <Picker.Item
-            label="Lesson 1"
-            value="1"
-          />
-          <Picker.Item
-            label="Lesson 2"
-            value="2"
-          />
-        </Picker>
+      {/* =========================
+          Lessons
+      ========================= */}
+
+      <View>
+        <Text>Lessons</Text>
+
+        <View style={{ marginBottom: 5 }}>
+          <Picker
+            style={globalStyles.input}
+            selectedValue={lesson}
+            onValueChange={(value) => setLesson(value)}
+          >
+            <Picker.Item
+              label="Select Lesson"
+              value=""
+            />
+
+            {differentLessons.map((item) => (
+              <Picker.Item
+                key={item}
+                label={`Lesson ${item}`}
+                value={item.toString()}
+              />
+            ))}
+          </Picker>
+        </View>
       </View>
 
+      {/* =========================
+          Videos
+      ========================= */}
 
-      {/* Videos */}
       <View>
         {selectedVideos.length > 0 ? (
           selectedVideos.map((video) => (
             <VideoPlayers
               key={video.id}
               video={video}
-            
             />
-            
           ))
         ) : (
-          <Text> Please select Course, Batch, Semester and Module. </Text>
+          <Text>
+            Please select Semester, Module and Lesson.
+          </Text>
         )}
       </View>
-      </ScrollView>
-      }
-
     </ScrollView>
   );
 }

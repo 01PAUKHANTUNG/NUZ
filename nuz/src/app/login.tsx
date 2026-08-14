@@ -1,27 +1,59 @@
-import React, { useContext, useState } from "react";
-import {View,Text,TextInput,TouchableOpacity, StyleSheet, Alert } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import {View,Text,TextInput,TouchableOpacity, StyleSheet, Alert, ToastAndroid } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { NUZContext } from "@/context/NUZContext";
+import { globalStyles } from "@/styles/global";
+import Toast from "react-native-toast-message";
+import { allUsers } from "@/assets/products";
+
 
 
 export default function Login() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("")
   const [studentId, setStudentId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const {token, setToken} = useContext(NUZContext);
+  const {token, setToken, studentInfo, setStudentInfo} = useContext(NUZContext);
+  const [loginStudent, setLoginStudent] = useState('');
+
+  const filteringLoginStudent = allUsers.find((item)=> 
+    item.name === name &&
+    item.emial === email &&
+    item.studentID === studentId &&
+    item.password === password
+  );
+ 
 
   const handleLogin = () => {
-    if (!studentId || !password) {
-    console.log("Error", "Please enter Student ID and Password");
+    if (!studentId || !password || !email || !studentId) {
+    
+    Toast.show({
+    type: "info",
+    text1: "Kisam lai",
+    text2: "Enter your infomation!",
+     });
       return;
     }
 
+    if(filteringLoginStudent){
     
-    if (studentId === "25MPA009" && password === "123456") {
+    if (name === filteringLoginStudent.name && 
+        studentId === filteringLoginStudent.studentID && 
+       password === filteringLoginStudent.password && 
+       email === filteringLoginStudent.emial) {
 
        setToken("ProKTung")
        
+       setStudentInfo({
+        name : name,
+        email : email,
+        studentID : studentId,
+        password : password
+       })
+      
+
 
     Alert.alert("Success", "Login successful");
     router.replace('/(tabs)')
@@ -29,6 +61,7 @@ export default function Login() {
     } else {
       Alert.alert("Login Failed", "Invalid Student ID or Password");
     }
+  }
   };
 
   return (
@@ -43,6 +76,40 @@ export default function Login() {
       <Text style={styles.subtitle}>
         Login to access your learning materials
       </Text>
+
+        {/* Student Name */}
+      <View style={styles.inputContainer}>
+        <Ionicons
+          name="person"
+          size={22}
+          color="#777"
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Your Name"
+          value={name}
+          onChangeText={setName}
+          autoCapitalize="none"
+        />
+      </View>
+
+       {/* Email*/}
+      <View style={styles.inputContainer}>
+        <Ionicons
+          name="mail"
+          size={22}
+          color="#777"
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Your Email"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+        />
+      </View>
 
       {/* Student ID */}
       <View style={styles.inputContainer}>
@@ -60,6 +127,8 @@ export default function Login() {
           autoCapitalize="none"
         />
       </View>
+
+      
 
       {/* Password */}
       <View style={styles.inputContainer}>
@@ -91,15 +160,12 @@ export default function Login() {
       {/* Login Button */}
       <TouchableOpacity
         style={styles.loginButton}
-        onPress={handleLogin}
+      onPress={handleLogin}
       >
         <Text style={styles.loginText}>Login</Text>
       </TouchableOpacity>
 
-      {/* Demo Account */}
-      <Text style={styles.demo}>
-        Demo: ST001 / 123456
-      </Text>
+      
 
     </View>
   );
@@ -154,6 +220,11 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     marginLeft: 10,
+    
+    borderColor : "#ddd",
+    padding: 10,
+    borderRadius: 6,
+    
   },
 
   loginButton: {
@@ -169,13 +240,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 17,
     fontWeight: "700",
-  },
-
-  demo: {
-    textAlign: "center",
-    color: "#999",
-    fontSize: 13,
-    marginTop: 20,
   },
 });
 

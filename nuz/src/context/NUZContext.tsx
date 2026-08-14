@@ -3,6 +3,7 @@ import React, { createContext, useState } from "react";
 type NUZContextType = {
   token: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
+ 
 };
 
 export const NUZContext = createContext<NUZContextType>({
@@ -12,11 +13,24 @@ export const NUZContext = createContext<NUZContextType>({
 
 const NUZProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState('');
+  const [studentClass, setStudentClass] = useState();
+ 
+
+  const [studentInfo, setStudentInfo] = useState({
+    name : "",
+    email: "" ,
+    studentID: "" ,
+    password: ""
+  });
+
+
+
 
   const value = {
-    token,
-    setToken,
-  };
+    token,setToken, studentInfo, setStudentInfo
+   };
+
+  
 
   return (
     <NUZContext.Provider value={value}>
