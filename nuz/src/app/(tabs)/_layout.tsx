@@ -1,8 +1,7 @@
-import { View, Text } from 'react-native'
-import React, { useContext } from 'react'
-import { Tabs } from 'expo-router'
-import { Ionicons } from '@expo/vector-icons';
 import { NUZContext } from '@/context/NUZContext';
+import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import { useContext } from 'react';
 import Login from '../login';
 
 
@@ -31,10 +30,10 @@ export default function _layout() {
         }} 
         />
 
-        <Tabs.Screen name='download'
+        <Tabs.Screen name='offlineStudy'
         options={{
             headerShown:false,
-            title :'Downloads',
+            title :'Offline Study',
             tabBarIcon:({color, size})=>(
                 <Ionicons name='download' size={size} color={color} />
             )

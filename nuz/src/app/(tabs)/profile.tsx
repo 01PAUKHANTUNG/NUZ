@@ -1,14 +1,19 @@
 import React, { useContext, useState } from "react";
 import {View,Text,TouchableOpacity,StyleSheet,Alert, ScrollView} from "react-native";
-import { globalStyles } from "../../styles/global";
+
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { NUZContext } from "@/context/NUZContext";
+import { globalStyles } from "@/styles/global";
 
 export default function Profile() {
   
  const {token, setToken, studentInfo} = useContext(NUZContext);
-
+ const studentClass = studentInfo?.studentID?.slice(2, 5) ?? "";
+   
+const studentBatch = studentInfo?.studentID
+    ? (Number(studentInfo.studentID.slice(0, 2)) - 24).toString()
+    : "";
 
   const handleLogout = () => {
     setToken('');
@@ -33,7 +38,7 @@ export default function Profile() {
           <Ionicons name="school-outline" size={22} color="#555" />
           <View>
             <Text style={globalStyles.label}>Course</Text>
-            <Text style={globalStyles.value}>MPA</Text>
+            <Text style={globalStyles.value}>{studentClass}</Text>
           </View>
         </View>
 
@@ -41,7 +46,7 @@ export default function Profile() {
           <Ionicons name="layers-outline" size={22} color="#555" />
           <View>
             <Text style={globalStyles.label}>Batch</Text>
-            <Text style={globalStyles.value}>3</Text>
+            <Text style={globalStyles.value}>{studentBatch}</Text>
           </View>
         </View>
 
@@ -51,7 +56,7 @@ export default function Profile() {
    
       {token !== '' ? (
         <TouchableOpacity
-          style={[globalStyles.button, globalStyles.logoutButton]}
+          style={[globalStyles.logoutButton]}
           onPress={handleLogout}
    
         >

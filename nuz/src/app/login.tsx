@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {View,Text,TextInput,TouchableOpacity, StyleSheet, Alert, ToastAndroid } from "react-native";
+import {View,Text,TextInput,TouchableOpacity, StyleSheet, Alert, ToastAndroid, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { NUZContext } from "@/context/NUZContext";
@@ -41,8 +41,8 @@ export default function Login() {
     
     if (name === filteringLoginStudent.name && 
         studentId === filteringLoginStudent.studentID && 
-       password === filteringLoginStudent.password && 
-       email === filteringLoginStudent.emial) {
+        password === filteringLoginStudent.password && 
+         email === filteringLoginStudent.emial) {
 
        setToken("ProKTung")
        
@@ -65,6 +65,14 @@ export default function Login() {
   };
 
   return (
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "android" ? "padding" : "height"}
+    >
+    <ScrollView
+    contentContainerStyle={styles.scrollContainer}
+    keyboardShouldPersistTaps="handled"
+    showsVerticalScrollIndicator={false}
+  >
     <View style={styles.container}>
 
       {/* Logo / Icon */}
@@ -165,13 +173,18 @@ export default function Login() {
         <Text style={styles.loginText}>Login</Text>
       </TouchableOpacity>
 
-      
-
     </View>
+     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+  flexGrow: 1,
+  justifyContent: "center",
+  paddingVertical: 10,
+},
   container: {
     flex: 1,
     backgroundColor: "#f5f7fb",

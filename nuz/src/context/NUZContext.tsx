@@ -3,7 +3,18 @@ import React, { createContext, useState } from "react";
 type NUZContextType = {
   token: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
- 
+  studentInfo: {
+    name: string;
+    email: string;
+    studentID: string;
+    password: string;
+  };
+  setStudentInfo: React.Dispatch<React.SetStateAction<{
+    name: string;
+    email: string;
+    studentID: string;
+    password: string;
+  }>>;
 };
 
 export const NUZContext = createContext<NUZContextType>({

@@ -2,10 +2,10 @@
 //backend lampan allUser Databse te ih ciapteh sak kholh kul
 
 export const allUsers = [ {
-  name : "Pau Khan Tung",
+  name : "P",
   emial : "pktung470@gmail.com",
   studentID : "25MPA009",
-  password : "123456",
+  password : "1",
 },
 {
   name : "Pau Khan",
@@ -26,19 +26,15 @@ export const allUsers = [ {
 
 export const lessons = [
 
-  // =========================
-  // MPA - Batch 1 - Semester 1
-  // =========================
-
   {
     id: "1",
     course: "MPA",
     batch: 1,
     semester: 1,
     module: "Academic Writing",
-    lesson: 1,
+    lesson: 1123,
     title: "Introduction to Academic Writing",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    videoUrl: "https://www.youtube.com/embed/i6iBAuwBODA?si=TRUybxJw2aT5Z4es",
     duration: 1200,
   },
 
@@ -50,7 +46,7 @@ export const lessons = [
     module: "Academic Writing",
     lesson: 2,
     title: "Academic Paragraph Writing",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    videoUrl: "https://www.youtube.com/embed/i6iBAuwBODA?si=TRUybxJw2aT5Z4es",
     duration: 1500,
   },
 

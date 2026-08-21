@@ -26,9 +26,9 @@ export const globalStyles = StyleSheet.create({
   
   input:{
     borderWidth : 1,
-    borderColor : "#ddd",
-  padding: 10,
-  borderRadius: 6,
+    borderColor : "#3b0505",
+    padding: 10,
+    borderRadius: 6
   },
    profileHeader: {
     alignItems: "center",
@@ -84,13 +84,20 @@ export const globalStyles = StyleSheet.create({
     marginTop: 3,
   },
 
-  button: {
-    height: 50,
+  downloadButton: {
+    height: 55,
+    backgroundColor: "#20d538",
     borderRadius: 12,
-    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 10,
+    marginTop: 10,
+    
+  },
+
+  downloadText: {
+    color: "#fff",
+    fontSize: 17,
+    fontWeight: "700",
   },
 
   loginButton: {
@@ -98,6 +105,11 @@ export const globalStyles = StyleSheet.create({
   },
 
   logoutButton: {
+    height: 55,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
     backgroundColor: "#dc2626",
   },
 
@@ -106,4 +118,5 @@ export const globalStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   }
+  
 })

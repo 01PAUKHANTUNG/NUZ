@@ -29,7 +29,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="assignment" />
-        <Stack.Screen name="download" />
+        <Stack.Screen name="offlineStudy" />
         <Stack.Screen name="profile" />
         <Stack.Screen name="login" />
       </Stack>
