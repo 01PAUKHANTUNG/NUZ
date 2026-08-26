@@ -123,3 +123,48 @@ export async function getDownloadedVideos() {
   );
 }
 
+
+// Delete downloaded video
+export async function deleteDownloadedVideo(id: string) {
+  const db = await getDatabase();
+
+  // Get the video first
+  const video = await db.getFirstAsync<any>(
+    `
+    SELECT *
+    FROM videos
+    WHERE id = ? AND downloaded = 1
+    `,
+    [id]
+  );
+
+  if (!video) {
+    throw new Error("Downloaded video not found");
+  }
+
+  // Delete physical video file
+  if (video.localUri) {
+    try {
+      const file = new File(video.localUri);
+
+      if (file.exists) {
+        file.delete();
+      }
+    } catch (error) {
+      console.log("File delete error:", error);
+    }
+  }
+
+  // Delete database record
+  await db.runAsync(
+    `
+    DELETE FROM videos
+    WHERE id = ?
+    `,
+    [id]
+  );
+
+  return true;
+}
+
+

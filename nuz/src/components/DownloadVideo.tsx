@@ -1,5 +1,7 @@
+import { deleteDownloadedVideo } from "@/database/videoDatabase";
+import { globalStyles } from "@/styles/global";
 import { useVideoPlayer, VideoView } from "expo-video";
-import { View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 type VideoPlayersProps = {
   video: {
@@ -17,6 +19,10 @@ type VideoPlayersProps = {
 
 export default function DownloadVideo({ video }: VideoPlayersProps) {
   const player = useVideoPlayer(video.videoUrl);
+   const handleDelete = async (id: string) => {
+    await deleteDownloadedVideo(id);
+    
+  };
 
   return (
     <View>
@@ -31,6 +37,9 @@ export default function DownloadVideo({ video }: VideoPlayersProps) {
           enable: true,
         }}
       />
+      <TouchableOpacity style={globalStyles.logoutButton} onPress={()=>handleDelete(video.id)}>
+        <Text style={globalStyles.buttonText}> Delete</Text>
+      </TouchableOpacity>
     </View>
   );
 }

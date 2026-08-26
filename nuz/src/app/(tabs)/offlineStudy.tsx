@@ -1,6 +1,6 @@
 import DownloadVideo from '@/components/DownloadVideo';
 import { NUZContext } from '@/context/NUZContext';
-import { getDownloadedVideos } from '@/database/videoDatabase';
+import { deleteDownloadedVideo, getDownloadedVideos } from '@/database/videoDatabase';
 import { globalStyles } from '@/styles/global';
 import { Picker } from '@react-native-picker/picker';
 import { useContext, useEffect, useMemo, useState } from 'react';
@@ -152,9 +152,8 @@ export default function OfflineStudy() {
     lesson,
   ]);
 
-  // --------------------------------
-  // UI
-  // --------------------------------
+ 
+ 
 
   return (
     <ScrollView
