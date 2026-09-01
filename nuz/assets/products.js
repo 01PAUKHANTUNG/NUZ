@@ -21,7 +21,6 @@ export const allUsers = [ {
 }
 ];
 
-
 //Admin hihte upload ding
 
 export const lessons = [
